@@ -22,16 +22,23 @@ public class ConcreteEdgesGraph implements Graph<String> {
     private final List<Edge> edges = new ArrayList<>();
 
     // Abstraction function:
-    // TODO
+    // a set of vertices of the graph and a set of edges of the graph with weight
     // Representation invariant:
-    // TODO
+    // vertices should be a String set
+    // edges should be a Edge list, the number of edges should be no more than possible number
     // Safety from rep exposure:
-    // TODO
+    // vertices and edges are private and final
+    // edges is mutable, set() will create a new edge to keep the Edge immutable
 
     // TODO constructor
-
-    // TODO checkRep
+    public ConcreteEdgesGraph() {
+        
+    }
     
+    // TODO checkRep
+    public void checkRep() {
+        
+    }
     @Override
     public boolean add(String vertex) {
         if (vertices.contains(vertex))
@@ -136,31 +143,35 @@ public class ConcreteEdgesGraph implements Graph<String> {
 class Edge {
 
     // TODO fields
-
+    private final String source, target;
+    private final int weight;
+    
     // Abstraction function:
-    // TODO
+    // represents the start and the end of the edge, and the distance between they two
     // Representation invariant:
-    // TODO
+    // source and target should be non-null String type
+    // source and target should be different
+    // weight >= 0
     // Safety from rep exposure:
-    // TODO
+    // all fields are private and final
+    // Edge is immutable, use getXXX methods to get the fields' info  
 
     // TODO constructor
-
-    // TODO checkRep
-
-    // TODO methods
-
-    // TODO toString()
-
     public Edge(String getsource, String gettarget, int getweight) {
         source = getsource;
         target = gettarget;
         weight = getweight;
     }
-
-    private final String source, target;
-    private final int weight;
-
+    
+    // TODO checkRep
+    public void checkRep() {
+        assert source != null;
+        assert target != null;
+        assert source != target;
+        assert weight >= 0;
+    }
+    
+    // TODO methods
     public String getsource() {
         return source;
     }
@@ -173,6 +184,7 @@ class Edge {
         return weight;
     }
 
+    // TODO toString()
     public String toString() {
         System.out.println(source + "->" + target);
         return source + "->" + target;

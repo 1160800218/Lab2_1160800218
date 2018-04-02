@@ -22,14 +22,18 @@ public class ConcreteVerticesGraph implements Graph<String> {
     private final List<Vertex> vertices = new ArrayList<>();
 
     // Abstraction function:
-    // TODO
+    // a set of source vertices of the graph 
     // Representation invariant:
-    // TODO
+    // 
     // Safety from rep exposure:
-    // TODO
+    // vertices is private and final
+    // 
 
     // TODO constructor
-
+    public ConcreteVerticesGraph() {
+        
+    }
+    
     // TODO checkRep
 
     @Override
@@ -48,11 +52,11 @@ public class ConcreteVerticesGraph implements Graph<String> {
         Vertex vertexsrc = vertices.get(hasVertex(source));
         int preweight;
         if (weight > 0) {
-            preweight = vertexsrc.setweight(target, weight);
+            preweight = vertexsrc.setWeight(target, weight);
         }
-        else if (weight <= 0 && vertexsrc.hastarget(target)) {
-            preweight = vertexsrc.targets.get(target);
-            vertexsrc.targets.remove(target);
+        else if (weight <= 0 && vertexsrc.hasTarget(target)) {
+            preweight = vertexsrc.getTargets().get(target);
+            vertexsrc.getTargets().remove(target);
         }
         else preweight = 0;
         return preweight;
@@ -75,7 +79,7 @@ public class ConcreteVerticesGraph implements Graph<String> {
         Iterator<Vertex> it = vertices.iterator();
         int i = 0;
         while (it.hasNext()) {
-            temp = vertices.get(i).vertexname;
+            temp = vertices.get(i).getName();
             newvertices.add(temp);
             i++;
         }
@@ -90,8 +94,8 @@ public class ConcreteVerticesGraph implements Graph<String> {
         Vertex temptarg;
         while (it.hasNext()) {
             temptarg = vertices.get(i);
-            if(temptarg.hastarget(target))
-                newsources.put(temptarg.vertexname, temptarg.targets.get(target));
+            if(temptarg.hasTarget(target))
+                newsources.put(temptarg.getName(), temptarg.getTargets().get(target));
             i++;
         }  
         return newsources;
@@ -99,14 +103,14 @@ public class ConcreteVerticesGraph implements Graph<String> {
 
     @Override
     public Map<String, Integer> targets(String source) {
-        return vertices.get(hasVertex(source)).targets;
+        return vertices.get(hasVertex(source)).getTargets();
     }
     
     //判断顶点是否存在
     public int hasVertex(String vertex) {
         Vertex temp;
         for (int i = 0; (temp = vertices.get(i)) != null; i++) {
-            if (temp.vertexname == vertex)
+            if (temp.getName() == vertex)
                 return i;
         }
         return -1;// 不存在则返回-1
@@ -126,40 +130,59 @@ public class ConcreteVerticesGraph implements Graph<String> {
 class Vertex {
 
     // TODO fields
-
+    private final String vertexname;
+    private final Map<String, Integer> targets = new HashMap<>();
+    
     // Abstraction function:
-    // TODO
+    // represents the name of source vertex and all of vertices and distances connecting to it  
     // Representation invariant:
-    // TODO
+    // vertexname should be non-null
+    // target vertex shouldn't be itself
+    // the key should be String type
+    // the value >= 0
     // Safety from rep exposure:
-    // TODO
+    // all the fields are private
+    // vertexname are final
+    
 
     // TODO constructor
-
-    // TODO checkRep
-
-    // TODO methods
-
-    // TODO toString()
-
     public Vertex(final String vertex) {
         this.vertexname = vertex;
     }
-
-    public String vertexname;
-    public Map<String, Integer> targets = new HashMap<>();
-
-    public int setweight(String target, int weight) {
+    
+    // TODO checkRep
+    public void checkRep() {
+        assert vertexname != null;
+        Iterator<Map.Entry<String, Integer>> it = targets.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String, Integer> entry = it.next();
+            assert entry.getKey() != null;
+            assert entry.getKey() != vertexname;
+            assert entry.getValue() >= 0;
+        }
+    }
+    
+    // TODO methods
+    public String getName() {
+        return vertexname;
+    }
+    
+    public int setWeight(String target, int weight) {
         int preweight = targets.get(target);
         targets.put(target, weight);
         return preweight;
     } 
     
-    public boolean hastarget(String target) {
+    public boolean hasTarget(String target) {
         if(targets.containsKey(target))
             return true;
         else return false;
     }
     
+    public Map<String, Integer> getTargets(){
+        return targets;
+    }
+    // TODO toString()
     
+
 }
