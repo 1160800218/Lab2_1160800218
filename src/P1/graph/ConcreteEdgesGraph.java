@@ -6,9 +6,11 @@ package graph;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * An implementation of Graph.
@@ -55,29 +57,31 @@ public class ConcreteEdgesGraph implements Graph<String> {
             add(source);
         if (!vertices.contains(target))
             add(target);
-        int i = 0, hasedge = 0, preweight;
+        int index = 0, hasedge = 0, preweight;
         Edge temp;
 
         // test whether edge exist or not
-        while ((temp = edges.get(i)) != null) {
+        Iterator<Edge> it = edges.iterator();
+        while (it.hasNext()) {
+            temp = it.next();
             if (temp.toString() == source + "->" + target) {
                 hasedge = 1;
                 break;
             }
-            i++;
+            index++;
         }
         if (hasedge == 0 && weight > 0) {
             Edge newedge = new Edge(source, target, weight);
             edges.add(newedge);
             preweight = 0;
         } else if (hasedge == 1 && weight > 0) {
-            preweight = temp.getweight();
-            edges.remove(i);
+            preweight = edges.get(index).getweight();
+            edges.remove(index);
             Edge newedge = new Edge(source, target, weight);
             edges.add(newedge);
         }
         else if (hasedge == 1 && weight == 0) {
-            edges.remove(i);
+            edges.remove(index);
             preweight = 0;
         } else
             preweight = 0;
@@ -127,7 +131,11 @@ public class ConcreteEdgesGraph implements Graph<String> {
     }
 
     // TODO toString()
-    
+    public String toString() {
+        return edges.stream()
+                .map(edge -> edge.toString())
+                .collect(Collectors.joining("\n"));
+    }
     
 
 }

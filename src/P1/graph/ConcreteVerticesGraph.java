@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * An implementation of Graph.
@@ -27,7 +28,7 @@ public class ConcreteVerticesGraph implements Graph<String> {
     // 
     // Safety from rep exposure:
     // vertices is private and final
-    // 
+    
 
     // TODO constructor
     public ConcreteVerticesGraph() {
@@ -108,15 +109,22 @@ public class ConcreteVerticesGraph implements Graph<String> {
     
     //判断顶点是否存在
     public int hasVertex(String vertex) {
-        Vertex temp;
-        for (int i = 0; (temp = vertices.get(i)) != null; i++) {
-            if (temp.getName() == vertex)
-                return i;
+        Iterator<Vertex> it = vertices.iterator();
+        int index = 0;
+        while(it.hasNext()) {
+            if (it.next().getName() == vertex)
+                return index;
+            index++;
         }
         return -1;// 不存在则返回-1
     }
     // TODO toString()
-
+    public String toString() {
+        return vertices.stream()
+                .filter(vertice -> !vertice.getTargets().isEmpty())
+                .map(vertice -> vertice.toString())
+                .collect(Collectors.joining("\n"));
+    }
 }
 
 /**
@@ -168,8 +176,12 @@ class Vertex {
     }
     
     public int setWeight(String target, int weight) {
-        int preweight = targets.get(target);
-        targets.put(target, weight);
+        int preweight = 0;
+        if(hasTarget(target)) {
+            preweight = targets.get(target);
+            targets.put(target, weight);
+        }
+        else targets.put(target, weight);
         return preweight;
     } 
     
@@ -183,6 +195,14 @@ class Vertex {
         return targets;
     }
     // TODO toString()
-    
-
+    public String toString() {
+        List<String> ret = new ArrayList<>();
+        Iterator<Map.Entry<String, Integer>> it = targets.entrySet().iterator();
+        while(it.hasNext()) {
+            Map.Entry<String, Integer> entry = it.next();
+            ret.add(vertexname + "->" + entry.getKey());
+        }
+        return ret.stream()
+                .collect(Collectors.joining("\n"));
+    }
 }

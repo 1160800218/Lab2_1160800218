@@ -32,6 +32,19 @@ public class ConcreteEdgesGraphTest extends GraphInstanceTest {
     //   TODO
     
     // TODO tests for ConcreteEdgesGraph.toString()
+    @Test public void testToString() {
+        Graph<String> graph = emptyInstance();
+        graph.add("a");
+        graph.add("b");
+        graph.add("c");
+        graph.add("d");
+        graph.set("a", "b", 1);
+        graph.set("a", "c", 2);
+        graph.set("b", "c", 1);
+        graph.set("d", "a", 3);
+        assertEquals("a->b" + "\n" + "a->c" + "\n" + "b->c" + "\n" + "d->a", graph.toString());
+    }
+    
     
     /*
      * Testing Edge...
