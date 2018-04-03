@@ -5,6 +5,9 @@ package graph;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Test;
 
 /**
@@ -29,11 +32,15 @@ public class ConcreteVerticesGraphTest extends GraphInstanceTest {
      */
     
     // Testing strategy for ConcreteVerticesGraph.toString()
-    //   TODO
+    // Create a new empty graph
+    // add 4 different vertices and 6 different edges to the graph
+    // add a repeated vertex to test rechecking function
+    // expected: return a String consist of 6 different "x->y" separated by "\n" 
     
     // TODO tests for ConcreteVerticesGraph.toString()
     @Test public void testToString() {
         Graph<String> graph = emptyInstance();
+        graph.add("a");
         graph.add("a");
         graph.add("b");
         graph.add("c");
@@ -52,8 +59,37 @@ public class ConcreteVerticesGraphTest extends GraphInstanceTest {
      */
     
     // Testing strategy for Vertex
-    //   TODO
+    // TODO
     
     // TODO tests for operations of Vertex
-    
+    @Test
+    public void testGetName() {
+        Vertex test = new Vertex("jeff");
+        assertEquals("jeff", test.getName());
+    }
+    @Test
+    public void testHasTarget() {
+        Vertex test = new Vertex("jeff");
+        assertEquals(false, test.hasTarget("Harbin"));
+    }
+    @Test
+    public void testSetTarget() {
+        Vertex test1 = new Vertex("jeff");
+        Vertex test2 = new Vertex("Harbin");
+        test1.setWeight("Harbin", 2016);
+        assertEquals(2016, test1.setWeight("Harbin", 2020));
+        assertEquals(0, test2.setWeight("jeff", 2018));
+    }
+    @Test
+    public void testGetTargets() {
+        Vertex test1 = new Vertex("jeff");
+        Map<String, Integer> cities = new HashMap<>();
+        test1.setWeight("Harbin", 2016);
+        test1.setWeight("Amoy", 2013);
+        test1.setWeight("Lanzhou", 2017);
+        cities.put("Harbin", 2016);
+        cities.put("Amoy", 2013);
+        cities.put("Lanzhou", 2017);
+        assertEquals(cities, test1.getTargets());
+    }
 }

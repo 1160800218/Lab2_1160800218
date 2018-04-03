@@ -165,10 +165,10 @@ class Edge {
     // Edge is immutable, use getXXX methods to get the fields' info  
 
     // TODO constructor
-    public Edge(String getsource, String gettarget, int getweight) {
-        source = getsource;
-        target = gettarget;
-        weight = getweight;
+    public Edge(String newsource, String newtarget, int newweight) {
+        source = newsource;
+        target = newtarget;
+        weight = newweight;
     }
     
     // TODO checkRep

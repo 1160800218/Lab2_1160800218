@@ -175,6 +175,12 @@ class Vertex {
         return vertexname;
     }
     
+    public boolean hasTarget(String target) {
+        if(targets.containsKey(target))
+            return true;
+        else return false;
+    }
+    
     public int setWeight(String target, int weight) {
         int preweight = 0;
         if(hasTarget(target)) {
@@ -184,12 +190,6 @@ class Vertex {
         else targets.put(target, weight);
         return preweight;
     } 
-    
-    public boolean hasTarget(String target) {
-        if(targets.containsKey(target))
-            return true;
-        else return false;
-    }
     
     public Map<String, Integer> getTargets(){
         return targets;
