@@ -18,10 +18,10 @@ import java.util.stream.Collectors;
  * <p>
  * PS2 instructions: you MUST use the provided rep.
  */
-public class ConcreteEdgesGraph implements Graph<String> {
+public class ConcreteEdgesGraph<L> implements Graph<L> {
 
-    private final Set<String> vertices = new HashSet<>();
-    private final List<Edge> edges = new ArrayList<>();
+    private final Set<L> vertices = new HashSet<>();
+    private final List<Edge<L>> edges = new ArrayList<>();
 
     // Abstraction function:
     // a set of vertices of the graph and a set of edges of the graph with weight
@@ -42,7 +42,7 @@ public class ConcreteEdgesGraph implements Graph<String> {
         
     }
     @Override
-    public boolean add(String vertex) {
+    public boolean add(L vertex) {
         if (vertices.contains(vertex))
             return false;
         else {
@@ -52,16 +52,16 @@ public class ConcreteEdgesGraph implements Graph<String> {
     }
 
     @Override
-    public int set(String source, String target, int weight) {
+    public int set(L source, L target, int weight) {
         if (!vertices.contains(source))
             add(source);
         if (!vertices.contains(target))
             add(target);
         int index = 0, hasedge = 0, preweight;
-        Edge temp;
+        Edge<L> temp;
 
         // test whether edge exist or not
-        Iterator<Edge> it = edges.iterator();
+        Iterator<Edge<L>> it = edges.iterator();
         while (it.hasNext()) {
             temp = it.next();
             if (temp.toString() == source + "->" + target) {
@@ -71,13 +71,13 @@ public class ConcreteEdgesGraph implements Graph<String> {
             index++;
         }
         if (hasedge == 0 && weight > 0) {
-            Edge newedge = new Edge(source, target, weight);
+            Edge<L> newedge = new Edge<>(source, target, weight);
             edges.add(newedge);
             preweight = 0;
         } else if (hasedge == 1 && weight > 0) {
             preweight = edges.get(index).getweight();
             edges.remove(index);
-            Edge newedge = new Edge(source, target, weight);
+            Edge<L> newedge = new Edge<>(source, target, weight);
             edges.add(newedge);
         }
         else if (hasedge == 1 && weight == 0) {
@@ -89,7 +89,7 @@ public class ConcreteEdgesGraph implements Graph<String> {
     }
 
     @Override
-    public boolean remove(String vertex) {
+    public boolean remove(L vertex) {
         if (vertices.contains(vertex)) {
             vertices.remove(vertex);
             return true;
@@ -98,15 +98,15 @@ public class ConcreteEdgesGraph implements Graph<String> {
     }
 
     @Override
-    public Set<String> vertices() {
+    public Set<L> vertices() {
         return vertices;
     }
 
     @Override
-    public Map<String, Integer> sources(String target) {
-        Map<String, Integer> sources = new HashMap<>();
+    public Map<L, Integer> sources(L target) {
+        Map<L, Integer> sources = new HashMap<>();
         int i = 0;
-        Edge temp;
+        Edge<L> temp;
         while ((temp = edges.get(i)) != null) {
             if (temp.gettarget() == target) {
                 sources.put(temp.getsource(), temp.getweight());
@@ -117,10 +117,10 @@ public class ConcreteEdgesGraph implements Graph<String> {
     }
 
     @Override
-    public Map<String, Integer> targets(String source) {
-        Map<String, Integer> targets = new HashMap<>();
+    public Map<L, Integer> targets(L source) {
+        Map<L, Integer> targets = new HashMap<>();
         int i = 0;
-        Edge temp;
+        Edge<L> temp;
         while ((temp = edges.get(i)) != null) {
             if (temp.getsource() == source) {
                 targets.put(temp.gettarget(), temp.getweight());
@@ -148,10 +148,10 @@ public class ConcreteEdgesGraph implements Graph<String> {
  * PS2 instructions: the specification and implementation of this class is up to
  * you.
  */
-class Edge {
+class Edge<L> {
 
     // TODO fields
-    private final String source, target;
+    private final L source, target;
     private final int weight;
     
     // Abstraction function:
@@ -165,7 +165,7 @@ class Edge {
     // Edge is immutable, use getXXX methods to get the fields' info  
 
     // TODO constructor
-    public Edge(String newsource, String newtarget, int newweight) {
+    public Edge(L newsource, L newtarget, int newweight) {
         source = newsource;
         target = newtarget;
         weight = newweight;
@@ -180,21 +180,24 @@ class Edge {
     }
     
     // TODO methods
-    public String getsource() {
+    public L getsource() {
+        checkRep();
         return source;
     }
 
-    public String gettarget() {
+    public L gettarget() {
+        checkRep();
         return target;
     }
     
     public int getweight() {
+        checkRep();
         return weight;
     }
 
     // TODO toString()
     public String toString() {
-        System.out.println(source + "->" + target);
+        checkRep();
         return source + "->" + target;
     }
 

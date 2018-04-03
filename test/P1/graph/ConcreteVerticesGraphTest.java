@@ -24,7 +24,7 @@ public class ConcreteVerticesGraphTest extends GraphInstanceTest {
      * Provide a ConcreteVerticesGraph for tests in GraphInstanceTest.
      */
     @Override public Graph<String> emptyInstance() {
-        return new ConcreteVerticesGraph();
+        return new ConcreteVerticesGraph<String>();
     }
     
     /*
@@ -64,25 +64,25 @@ public class ConcreteVerticesGraphTest extends GraphInstanceTest {
     // TODO tests for operations of Vertex
     @Test
     public void testGetName() {
-        Vertex test = new Vertex("jeff");
+        Vertex<String> test = new Vertex<>("jeff");
         assertEquals("jeff", test.getName());
     }
     @Test
     public void testHasTarget() {
-        Vertex test = new Vertex("jeff");
+        Vertex<String> test = new Vertex<>("jeff");
         assertEquals(false, test.hasTarget("Harbin"));
     }
     @Test
     public void testSetTarget() {
-        Vertex test1 = new Vertex("jeff");
-        Vertex test2 = new Vertex("Harbin");
+        Vertex<String> test1 = new Vertex<>("jeff");
+        Vertex<String> test2 = new Vertex<>("Harbin");
         test1.setWeight("Harbin", 2016);
         assertEquals(2016, test1.setWeight("Harbin", 2020));
         assertEquals(0, test2.setWeight("jeff", 2018));
     }
     @Test
     public void testGetTargets() {
-        Vertex test1 = new Vertex("jeff");
+        Vertex<String> test1 = new Vertex<>("jeff");
         Map<String, Integer> cities = new HashMap<>();
         test1.setWeight("Harbin", 2016);
         test1.setWeight("Amoy", 2013);

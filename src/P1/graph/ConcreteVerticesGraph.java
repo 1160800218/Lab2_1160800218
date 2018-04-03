@@ -18,9 +18,9 @@ import java.util.stream.Collectors;
  * <p>
  * PS2 instructions: you MUST use the provided rep.
  */
-public class ConcreteVerticesGraph implements Graph<String> {
+public class ConcreteVerticesGraph<L> implements Graph<L> {
 
-    private final List<Vertex> vertices = new ArrayList<>();
+    private final List<Vertex<L>> vertices = new ArrayList<>();
 
     // Abstraction function:
     // a set of source vertices of the graph 
@@ -38,19 +38,19 @@ public class ConcreteVerticesGraph implements Graph<String> {
     // TODO checkRep
 
     @Override
-    public boolean add(String vertex) {
+    public boolean add(L vertex) {
         if (hasVertex(vertex) != -1)
             return false;
-        Vertex vertexadd = new Vertex(vertex);
+        Vertex<L> vertexadd = new Vertex<>(vertex);
         boolean added = vertices.add(vertexadd);
         return added;
     }
 
     @Override
-    public int set(String source, String target, int weight) {
+    public int set(L source, L target, int weight) {
         add(source);
         add(target);
-        Vertex vertexsrc = vertices.get(hasVertex(source));
+        Vertex<L> vertexsrc = vertices.get(hasVertex(source));
         int preweight;
         if (weight > 0) {
             preweight = vertexsrc.setWeight(target, weight);
@@ -64,7 +64,7 @@ public class ConcreteVerticesGraph implements Graph<String> {
     }
 
     @Override
-    public boolean remove(String vertex) {
+    public boolean remove(L vertex) {
         int index;
         if ((index = hasVertex(vertex)) != -1) {
             vertices.remove(index);
@@ -74,10 +74,10 @@ public class ConcreteVerticesGraph implements Graph<String> {
     }
 
     @Override
-    public Set<String> vertices() {
-        Set<String> newvertices = new HashSet<>();
-        String temp;
-        Iterator<Vertex> it = vertices.iterator();
+    public Set<L> vertices() {
+        Set<L> newvertices = new HashSet<>();
+        L temp;
+        Iterator<Vertex<L>> it = vertices.iterator();
         int i = 0;
         while (it.hasNext()) {
             temp = vertices.get(i).getName();
@@ -88,11 +88,11 @@ public class ConcreteVerticesGraph implements Graph<String> {
     }
 
     @Override
-    public Map<String, Integer> sources(String target) {
-        Map<String, Integer> newsources = new HashMap<>();
-        Iterator<Vertex> it = vertices.iterator();
+    public Map<L, Integer> sources(L target) {
+        Map<L, Integer> newsources = new HashMap<>();
+        Iterator<Vertex<L>> it = vertices.iterator();
         int i = 0;
-        Vertex temptarg;
+        Vertex<L> temptarg;
         while (it.hasNext()) {
             temptarg = vertices.get(i);
             if(temptarg.hasTarget(target))
@@ -103,13 +103,13 @@ public class ConcreteVerticesGraph implements Graph<String> {
     }
 
     @Override
-    public Map<String, Integer> targets(String source) {
+    public Map<L, Integer> targets(L source) {
         return vertices.get(hasVertex(source)).getTargets();
     }
     
     //≈–∂œ∂•µ„ «∑Ò¥Ê‘⁄
-    public int hasVertex(String vertex) {
-        Iterator<Vertex> it = vertices.iterator();
+    public int hasVertex(L vertex) {
+        Iterator<Vertex<L>> it = vertices.iterator();
         int index = 0;
         while(it.hasNext()) {
             if (it.next().getName() == vertex)
@@ -135,11 +135,11 @@ public class ConcreteVerticesGraph implements Graph<String> {
  * PS2 instructions: the specification and implementation of this class is up to
  * you.
  */
-class Vertex {
+class Vertex<L> {
 
     // TODO fields
-    private final String vertexname;
-    private final Map<String, Integer> targets = new HashMap<>();
+    private final L vertexname;
+    private final Map<L, Integer> targets = new HashMap<>();
     
     // Abstraction function:
     // represents the name of source vertex and all of vertices and distances connecting to it  
@@ -154,16 +154,16 @@ class Vertex {
     
 
     // TODO constructor
-    public Vertex(final String vertex) {
+    public Vertex(final L vertex) {
         this.vertexname = vertex;
     }
     
     // TODO checkRep
     public void checkRep() {
         assert vertexname != null;
-        Iterator<Map.Entry<String, Integer>> it = targets.entrySet().iterator();
+        Iterator<Map.Entry<L, Integer>> it = targets.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<String, Integer> entry = it.next();
+            Map.Entry<L, Integer> entry = it.next();
             assert entry.getKey() != null;
             assert entry.getKey() != vertexname;
             assert entry.getValue() >= 0;
@@ -171,37 +171,49 @@ class Vertex {
     }
     
     // TODO methods
-    public String getName() {
+    public L getName() {
+        checkRep();
         return vertexname;
     }
     
-    public boolean hasTarget(String target) {
-        if(targets.containsKey(target))
+    public boolean hasTarget(L target) {
+        checkRep();
+        if(targets.containsKey(target)) {
+            checkRep();
             return true;
-        else return false;
+        }
+        else {
+            checkRep();
+            return false;
+        }
     }
     
-    public int setWeight(String target, int weight) {
+    public int setWeight(L target, int weight) {
+        checkRep();
         int preweight = 0;
         if(hasTarget(target)) {
             preweight = targets.get(target);
             targets.put(target, weight);
         }
         else targets.put(target, weight);
+        checkRep();
         return preweight;
     } 
     
-    public Map<String, Integer> getTargets(){
+    public Map<L, Integer> getTargets(){
+        checkRep();
         return targets;
     }
     // TODO toString()
     public String toString() {
+        checkRep();
         List<String> ret = new ArrayList<>();
-        Iterator<Map.Entry<String, Integer>> it = targets.entrySet().iterator();
+        Iterator<Map.Entry<L, Integer>> it = targets.entrySet().iterator();
         while(it.hasNext()) {
-            Map.Entry<String, Integer> entry = it.next();
+            Map.Entry<L, Integer> entry = it.next();
             ret.add(vertexname + "->" + entry.getKey());
         }
+        checkRep();
         return ret.stream()
                 .collect(Collectors.joining("\n"));
     }
