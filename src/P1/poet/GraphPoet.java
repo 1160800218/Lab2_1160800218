@@ -3,86 +3,168 @@
  */
 package poet;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 
 import graph.Graph;
 
 /**
  * A graph-based poetry generator.
  * 
- * <p>GraphPoet is initialized with a corpus of text, which it uses to derive a
- * word affinity graph.
- * Vertices in the graph are words. Words are defined as non-empty
- * case-insensitive strings of non-space non-newline characters. They are
- * delimited in the corpus by spaces, newlines, or the ends of the file.
+ * <p>
+ * GraphPoet is initialized with a corpus of text, which it uses to derive a
+ * word affinity graph. Vertices in the graph are words. Words are defined as
+ * non-empty case-insensitive strings of non-space non-newline characters. They
+ * are delimited in the corpus by spaces, newlines, or the ends of the file.
  * Edges in the graph count adjacencies: the number of times "w1" is followed by
  * "w2" in the corpus is the weight of the edge from w1 to w2.
  * 
- * <p>For example, given this corpus:
- * <pre>    Hello, HELLO, hello, goodbye!    </pre>
- * <p>the graph would contain two edges:
- * <ul><li> ("hello,") -> ("hello,")   with weight 2
- *     <li> ("hello,") -> ("goodbye!") with weight 1 </ul>
- * <p>where the vertices represent case-insensitive {@code "hello,"} and
+ * <p>
+ * For example, given this corpus:
+ * 
+ * <pre>
+ *     Hello, HELLO, hello, goodbye!
+ * </pre>
+ * <p>
+ * the graph would contain two edges:
+ * <ul>
+ * <li>("hello,") -> ("hello,") with weight 2
+ * <li>("hello,") -> ("goodbye!") with weight 1
+ * </ul>
+ * <p>
+ * where the vertices represent case-insensitive {@code "hello,"} and
  * {@code "goodbye!"}.
  * 
- * <p>Given an input string, GraphPoet generates a poem by attempting to
- * insert a bridge word between every adjacent pair of words in the input.
- * The bridge word between input words "w1" and "w2" will be some "b" such that
- * w1 -> b -> w2 is a two-edge-long path with maximum-weight weight among all
- * the two-edge-long paths from w1 to w2 in the affinity graph.
- * If there are no such paths, no bridge word is inserted.
- * In the output poem, input words retain their original case, while bridge
- * words are lower case. The whitespace between every word in the poem is a
- * single space.
+ * <p>
+ * Given an input string, GraphPoet generates a poem by attempting to insert a
+ * bridge word between every adjacent pair of words in the input. The bridge
+ * word between input words "w1" and "w2" will be some "b" such that w1 -> b ->
+ * w2 is a two-edge-long path with maximum-weight weight among all the
+ * two-edge-long paths from w1 to w2 in the affinity graph. If there are no such
+ * paths, no bridge word is inserted. In the output poem, input words retain
+ * their original case, while bridge words are lower case. The whitespace
+ * between every word in the poem is a single space.
  * 
- * <p>For example, given this corpus:
- * <pre>    This is a test of the Mugar Omni Theater sound system.    </pre>
- * <p>on this input:
- * <pre>    Test the system.    </pre>
- * <p>the output poem would be:
- * <pre>    Test of the system.    </pre>
+ * <p>
+ * For example, given this corpus:
  * 
- * <p>PS2 instructions: this is a required ADT class, and you MUST NOT weaken
- * the required specifications. However, you MAY strengthen the specifications
- * and you MAY add additional methods.
- * You MUST use Graph in your rep, but otherwise the implementation of this
- * class is up to you.
+ * <pre>
+ *     This is a test of the Mugar Omni Theater sound system.
+ * </pre>
+ * <p>
+ * on this input:
+ * 
+ * <pre>
+ *     Test the system.
+ * </pre>
+ * <p>
+ * the output poem would be:
+ * 
+ * <pre>
+ *     Test of the system.
+ * </pre>
+ * 
+ * <p>
+ * PS2 instructions: this is a required ADT class, and you MUST NOT weaken the
+ * required specifications. However, you MAY strengthen the specifications and
+ * you MAY add additional methods. You MUST use Graph in your rep, but otherwise
+ * the implementation of this class is up to you.
  */
 public class GraphPoet {
-    
+
     private final Graph<String> graph = Graph.empty();
-    
+    private final List<String> corpuswords = new ArrayList<>();
     // Abstraction function:
-    //   TODO
+    // represents a 
     // Representation invariant:
-    //   TODO
+    // graph is a non-null Graph
     // Safety from rep exposure:
-    //   TODO
-    
+    // all fields are private and final,
+    // client only can use getWords() to initialize corpuswords but can't get it
+    // poem() is the only method client can use to get a result
+
     /**
      * Create a new poet with the graph from corpus (as described above).
      * 
-     * @param corpus text file from which to derive the poet's affinity graph
-     * @throws IOException if the corpus file cannot be found or read
+     * @param corpus
+     *            text file from which to derive the poet's affinity graph
+     * @throws IOException
+     *             if the corpus file cannot be found or read
      */
     public GraphPoet(File corpus) throws IOException {
-        throw new RuntimeException("not implemented");
+        getWords(corpus);
+        String temp;
+
+        Iterator<String> it = corpuswords.iterator();
+        temp = it.next().toLowerCase();
+        while (it.hasNext()) {
+            graph.set(temp, temp = it.next().toLowerCase(), 1);
+        }
     }
     
-    // TODO checkRep
+    public void checkRep() {
+        assert graph != null;
+    }
     
+    public Map<String, Integer> target(String source) {
+        checkRep();
+        return graph.targets(source);
+    }
+
+    public void getWords(File corpus) throws IOException {
+        checkRep();
+        Scanner s = new Scanner(new BufferedReader(new FileReader(corpus)));
+        while (s.hasNext())
+            corpuswords.add(s.next());
+        s.close();
+        checkRep();
+    }
+
     /**
      * Generate a poem.
      * 
-     * @param input string from which to create the poem
+     * @param input
+     *            string from which to create the poem
      * @return poem (as described above)
+     * 
+     * 
      */
     public String poem(String input) {
-        throw new RuntimeException("not implemented");
+        checkRep();
+        List<String> poem = new ArrayList<>();
+        String[] separated;
+        String temp;
+        int index = 0;
+        separated = input.split(" ");
+        while (index < separated.length - 1) {
+            poem.add(separated[index]);
+            if (!graph.targets(separated[index]).containsKey(separated[index + 1])) {
+                Iterator<Map.Entry<String, Integer>> it = graph.targets(separated[index]).entrySet().iterator();
+                while (it.hasNext()) {
+                    if (graph.targets(temp = it.next().getKey()).containsKey(separated[index + 1]))
+                        poem.add(temp);
+                }
+            }
+            index++;
+        }
+        poem.add(separated[index]);
+        checkRep();
+        return poem.stream().collect(Collectors.joining(" "));
     }
-    
-    // TODO toString()
-    
+
+    public String toString() {
+        checkRep();
+        return graph.toString();
+    }
+
 }

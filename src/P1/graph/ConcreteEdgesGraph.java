@@ -105,13 +105,12 @@ public class ConcreteEdgesGraph<L> implements Graph<L> {
     @Override
     public Map<L, Integer> sources(L target) {
         Map<L, Integer> sources = new HashMap<>();
-        int i = 0;
-        Edge<L> temp;
-        while ((temp = edges.get(i)) != null) {
+        Iterator<Edge<L>> it = edges.iterator();
+        while (it.hasNext()) {
+            Edge<L> temp = it.next();
             if (temp.gettarget() == target) {
                 sources.put(temp.getsource(), temp.getweight());
             }
-            i++;
         }
         return sources;
     }
@@ -119,13 +118,12 @@ public class ConcreteEdgesGraph<L> implements Graph<L> {
     @Override
     public Map<L, Integer> targets(L source) {
         Map<L, Integer> targets = new HashMap<>();
-        int i = 0;
-        Edge<L> temp;
-        while ((temp = edges.get(i)) != null) {
+        Iterator<Edge<L>> it = edges.iterator();
+        while (it.hasNext()) {
+            Edge<L> temp = it.next();
             if (temp.getsource() == source) {
                 targets.put(temp.gettarget(), temp.getweight());
             }
-            i++;
         }
         return targets;
     }
@@ -198,7 +196,7 @@ class Edge<L> {
     // TODO toString()
     public String toString() {
         checkRep();
-        return source + "->" + target;
+        return getsource().toString() + "->" + gettarget().toString();
     }
 
 }

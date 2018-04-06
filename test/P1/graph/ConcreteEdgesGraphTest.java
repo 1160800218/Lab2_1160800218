@@ -5,6 +5,9 @@ package graph;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Test;
 
 /**
@@ -35,9 +38,10 @@ public class ConcreteEdgesGraphTest extends GraphInstanceTest {
     // expected: return a String consist of 4 different "x->y" separated by "\n" 
     
     // TODO tests for ConcreteEdgesGraph.toString()
+    Graph<String> graph = emptyInstance();
+    
     @Test 
     public void testToString() {
-        Graph<String> graph = emptyInstance();
         graph.add("a");
         graph.add("a");
         graph.add("b");
@@ -49,8 +53,24 @@ public class ConcreteEdgesGraphTest extends GraphInstanceTest {
         graph.set("d", "a", 3);
         assertEquals("a->b" + "\n" + "a->c" + "\n" + "b->c" + "\n" + "d->a", graph.toString());
     }
-    
-    
+    @Test
+    public void testSources() {
+        Map<String, Integer> c_sources = new HashMap<>();
+        graph.set("a", "c", 2);
+        graph.set("b", "c", 1);
+        c_sources.put("a", 2);
+        c_sources.put("b", 1);
+        assertEquals(c_sources, graph.sources("c"));
+    }
+    @Test
+    public void testTargets() {
+        Map<String, Integer> a_sources = new HashMap<>();
+        graph.set("a", "b", 1);
+        graph.set("a", "c", 2);
+        a_sources.put("b", 1);
+        a_sources.put("c", 2);
+        assertEquals(a_sources, graph.targets("a"));
+    }
     /*
      * Testing Edge...
      */

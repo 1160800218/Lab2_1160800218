@@ -91,13 +91,11 @@ public class ConcreteVerticesGraph<L> implements Graph<L> {
     public Map<L, Integer> sources(L target) {
         Map<L, Integer> newsources = new HashMap<>();
         Iterator<Vertex<L>> it = vertices.iterator();
-        int i = 0;
         Vertex<L> temptarg;
         while (it.hasNext()) {
-            temptarg = vertices.get(i);
+            temptarg = it.next();
             if(temptarg.hasTarget(target))
                 newsources.put(temptarg.getName(), temptarg.getTargets().get(target));
-            i++;
         }  
         return newsources;
     }
@@ -211,7 +209,7 @@ class Vertex<L> {
         Iterator<Map.Entry<L, Integer>> it = targets.entrySet().iterator();
         while(it.hasNext()) {
             Map.Entry<L, Integer> entry = it.next();
-            ret.add(vertexname + "->" + entry.getKey());
+            ret.add(getName().toString() + "->" + entry.getKey().toString());
         }
         checkRep();
         return ret.stream()
