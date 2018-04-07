@@ -14,8 +14,6 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
-
 import graph.Graph;
 
 /**
@@ -85,12 +83,13 @@ public class GraphPoet {
     private final Graph<String> graph = Graph.empty();
     private final List<String> corpuswords = new ArrayList<>();
     // Abstraction function:
-    // represents a 
+    // represents a
     // Representation invariant:
     // graph is a non-null Graph
     // Safety from rep exposure:
     // all fields are private and final,
-    // client only can use getWords() to initialize corpuswords but can't get it
+    // getWordsFromFile() is private,
+    // client can use getCorpusWords() to get corpuswords,
     // poem() is the only method client can use to get a result
 
     /**
@@ -102,32 +101,37 @@ public class GraphPoet {
      *             if the corpus file cannot be found or read
      */
     public GraphPoet(File corpus) throws IOException {
-        getWords(corpus);
-        String temp;
+        getWordsFromFile(corpus);
+        connectWords();
+    }
 
+    private void connectWords() {
+        String source, target;
         Iterator<String> it = corpuswords.iterator();
-        temp = it.next().toLowerCase();
+        it.hasNext();
+        target = it.next().toLowerCase();
         while (it.hasNext()) {
-            graph.set(temp, temp = it.next().toLowerCase(), 1);
+            source = target;
+            target = it.next().toLowerCase();
+            graph.set(source, target, 1);
         }
     }
-    
+
     public void checkRep() {
         assert graph != null;
     }
-    
-    public Map<String, Integer> target(String source) {
-        checkRep();
-        return graph.targets(source);
-    }
 
-    public void getWords(File corpus) throws IOException {
+    private void getWordsFromFile(File corpus) throws IOException {
         checkRep();
         Scanner s = new Scanner(new BufferedReader(new FileReader(corpus)));
         while (s.hasNext())
             corpuswords.add(s.next());
         s.close();
         checkRep();
+    }
+
+    public List<String> getCorpusWords() {
+        return corpuswords;
     }
 
     /**
@@ -142,22 +146,24 @@ public class GraphPoet {
     public String poem(String input) {
         checkRep();
         List<String> poem = new ArrayList<>();
-        String[] separated;
+        String[] separatedwords;
         String temp;
         int index = 0;
-        separated = input.split(" ");
-        while (index < separated.length - 1) {
-            poem.add(separated[index]);
-            if (!graph.targets(separated[index]).containsKey(separated[index + 1])) {
-                Iterator<Map.Entry<String, Integer>> it = graph.targets(separated[index]).entrySet().iterator();
+        separatedwords = input.split(" ");
+        while (index < separatedwords.length - 1) {
+            poem.add(separatedwords[index]);
+            if (!graph.targets(separatedwords[index]).containsKey(separatedwords[index + 1])) {
+                Iterator<Map.Entry<String, Integer>> it = graph.targets(separatedwords[index]).entrySet().iterator();
                 while (it.hasNext()) {
-                    if (graph.targets(temp = it.next().getKey()).containsKey(separated[index + 1]))
+                    if (graph.targets(temp = it.next().getKey()).containsKey(separatedwords[index + 1])) {
                         poem.add(temp);
+                        System.out.println(temp);
+                    }
                 }
             }
             index++;
         }
-        poem.add(separated[index]);
+        poem.add(separatedwords[index]);
         checkRep();
         return poem.stream().collect(Collectors.joining(" "));
     }

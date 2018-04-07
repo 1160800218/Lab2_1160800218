@@ -6,6 +6,10 @@ package graph;
 import static org.junit.Assert.*;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -36,11 +40,66 @@ public abstract class GraphInstanceTest {
     
     @Test
     public void testInitialVerticesEmpty() {
-        // TODO you may use, change, or remove this test
         assertEquals("expected new graph to have no vertices",
                 Collections.emptySet(), emptyInstance().vertices());
     }
     
-    // TODO other tests for instance methods of Graph
+    // other tests for instance methods of Graph
+    @Test
+    public void testAdd() {
+        Graph<String> graph = emptyInstance();
+        assertEquals("expected graph to have no vertices", 0, graph.vertices().size());
+        assertTrue("expected success to add a vertex to graph", graph.add("add_1"));
+        assertTrue("expected fail to add a repeated vertex", !graph.add("add_1"));
+        assertEquals("expected graph has a vertex", 1, graph.vertices().size());
+    }
+    @Test
+    public void testSet() {
+        Graph<String> graph = emptyInstance();
+        assertTrue("expected success to add a vertex to graph", graph.add("add_1"));
+        assertTrue("expected success to add a vertex to graph", graph.add("add_2"));
+        assertEquals("expected success to add a new edge and return 0", 0, graph.set("add_1", "add_2", 1));
+        assertEquals("expected success to update an existent edge and return preweight", 1, graph.set("add_1", "add_2", 2));
+        assertEquals("expected remove an existent edge and return preweight", 2, graph.set("add_1", "add_2", 0));
+        assertEquals("expected no edge added but just add vertices", 0, graph.set("add_2", "add_3", 0));
+        assertEquals("expected three vertices exist", 3, graph.vertices().size());
+    }
+    @Test
+    public void testRemove() {
+        Graph<String> graph = emptyInstance();
+        assertTrue("expected success to add a vertex to graph", graph.add("add_1"));
+        assertEquals("expected graph has a vertex", 1, graph.vertices().size());
+        assertTrue("expected success to remove a vertex from graph", graph.remove("add_1"));
+        assertTrue("expected fail to remove a non-existent vertex", !graph.remove("add_1"));
+        assertEquals("expected graph to have no vertices", 0, graph.vertices().size());
+    }
+    @Test
+    public void testExistVertices() {
+        Graph<String> graph = emptyInstance();
+        Set<String> vertices = new HashSet<>();
+        vertices.add("add_1");
+        assertTrue("expected success to add a vertex to graph", graph.add("add_1"));
+        assertEquals("expected a non-empty set of vertices", vertices, graph.vertices());
+    }
+    @Test
+    public void testGetSources() {
+        Graph<String> graph = emptyInstance();
+        Map<String, Integer> sources = new HashMap<>();
+        sources.put("add_2", 1);
+        sources.put("add_1", 2);
+        assertEquals("expected success to add a new edge and return 0", 0, graph.set("add_2", "add_3", 1));
+        assertEquals("expected success to add a new edge and return 0", 0, graph.set("add_1", "add_3", 2));
+        assertEquals("expected get a map including the source vertices of 'add_3'", sources, graph.sources("add_3"));
+    }
+    @Test
+    public void testGetTargets() {
+        Graph<String> graph = emptyInstance();
+        Map<String, Integer> targets = new HashMap<>();
+        targets.put("add_2", 1);
+        targets.put("add_3", 2);
+        assertEquals("expected success to add a new edge and return 0", 0, graph.set("add_1", "add_2", 1));
+        assertEquals("expected success to add a new edge and return 0", 0, graph.set("add_1", "add_3", 2));
+        assertEquals("expected get a map including the target vertices of 'add_1'", targets, graph.targets("add_1"));
+    }
     
 }

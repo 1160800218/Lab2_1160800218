@@ -12,10 +12,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.sun.javafx.collections.MappingChange.Map;
-
-import graph.Graph;
-
 /**
  * Tests for GraphPoet.
  */
@@ -29,7 +25,7 @@ public class GraphPoetTest {
         assert false; // make sure assertions are enabled with VM argument: -ea
     }
     
-    // TODO tests   
+    // tests   
     File f = new File("C:\\Users\\jeffery\\Desktop\\SC\\workspace\\Lab2_1160800218\\test\\P1\\poet\\testGraphPoet.txt");
     public GraphPoet createGraph() throws IOException{
         GraphPoet graphpoet = new GraphPoet(f);
@@ -40,21 +36,16 @@ public class GraphPoetTest {
     public void testGetWords() throws IOException {
         GraphPoet graphpoet = createGraph();
         List<String> corpuswords = new ArrayList<>();
-        graphpoet.getWords(f);
+        corpuswords = graphpoet.getCorpusWords();
         assertEquals(22, corpuswords.size());
         assertTrue(corpuswords.contains("learning"));
-    }
-    @Test
-    public void testTargets() throws IOException {
-        GraphPoet graphpoet = createGraph();
-        assertEquals("a", graphpoet.target("but"));
     }
     @Test
     public void testPoem() throws IOException {
         GraphPoet graphpoet = createGraph();
         String poem;
-        poem = graphpoet.poem("i learning the SC,");
-        assertEquals("i am learning the SC,", poem);
+        poem = graphpoet.poem("i learning sc,");
+        assertEquals("i am learning the sc,", poem);
     }
     @Test
     public void testToString() throws IOException {

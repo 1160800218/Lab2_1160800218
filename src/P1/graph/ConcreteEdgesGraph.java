@@ -32,15 +32,11 @@ public class ConcreteEdgesGraph<L> implements Graph<L> {
     // vertices and edges are private and final
     // edges is mutable, set() will create a new edge to keep the Edge immutable
 
-    // TODO constructor
     public ConcreteEdgesGraph() {
         
     }
     
-    // TODO checkRep
-    public void checkRep() {
-        
-    }
+    public void checkRep() {}
     @Override
     public boolean add(L vertex) {
         if (vertices.contains(vertex))
@@ -64,7 +60,7 @@ public class ConcreteEdgesGraph<L> implements Graph<L> {
         Iterator<Edge<L>> it = edges.iterator();
         while (it.hasNext()) {
             temp = it.next();
-            if (temp.toString() == source + "->" + target) {
+            if (temp.getsource().equals(source) && temp.gettarget().equals(target)) {
                 hasedge = 1;
                 break;
             }
@@ -81,8 +77,8 @@ public class ConcreteEdgesGraph<L> implements Graph<L> {
             edges.add(newedge);
         }
         else if (hasedge == 1 && weight == 0) {
+            preweight = edges.get(index).getweight();
             edges.remove(index);
-            preweight = 0;
         } else
             preweight = 0;
         return preweight;
@@ -108,7 +104,7 @@ public class ConcreteEdgesGraph<L> implements Graph<L> {
         Iterator<Edge<L>> it = edges.iterator();
         while (it.hasNext()) {
             Edge<L> temp = it.next();
-            if (temp.gettarget() == target) {
+            if (temp.gettarget().equals(target)) {
                 sources.put(temp.getsource(), temp.getweight());
             }
         }
@@ -121,14 +117,13 @@ public class ConcreteEdgesGraph<L> implements Graph<L> {
         Iterator<Edge<L>> it = edges.iterator();
         while (it.hasNext()) {
             Edge<L> temp = it.next();
-            if (temp.getsource() == source) {
+            if (temp.getsource().equals(source)) {
                 targets.put(temp.gettarget(), temp.getweight());
             }
         }
         return targets;
     }
 
-    // TODO toString()
     public String toString() {
         return edges.stream()
                 .map(edge -> edge.toString())
@@ -162,14 +157,12 @@ class Edge<L> {
     // all fields are private and final
     // Edge is immutable, use getXXX methods to get the fields' info  
 
-    // TODO constructor
     public Edge(L newsource, L newtarget, int newweight) {
         source = newsource;
         target = newtarget;
         weight = newweight;
     }
     
-    // TODO checkRep
     public void checkRep() {
         assert source != null;
         assert target != null;
@@ -177,7 +170,6 @@ class Edge<L> {
         assert weight >= 0;
     }
     
-    // TODO methods
     public L getsource() {
         checkRep();
         return source;

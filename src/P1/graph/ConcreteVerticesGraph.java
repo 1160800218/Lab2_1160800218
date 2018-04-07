@@ -25,29 +25,30 @@ public class ConcreteVerticesGraph<L> implements Graph<L> {
     // Abstraction function:
     // a set of source vertices of the graph 
     // Representation invariant:
-    // 
+    // vertices is no-null List
     // Safety from rep exposure:
     // vertices is private and final
-    
 
-    // TODO constructor
-    public ConcreteVerticesGraph() {
-        
+    public ConcreteVerticesGraph() {}
+    
+    public void checkRep() {
+        assert vertices != null;
     }
     
-    // TODO checkRep
-
     @Override
     public boolean add(L vertex) {
+        checkRep();
         if (hasVertex(vertex) != -1)
             return false;
         Vertex<L> vertexadd = new Vertex<>(vertex);
         boolean added = vertices.add(vertexadd);
+        checkRep();
         return added;
     }
 
     @Override
     public int set(L source, L target, int weight) {
+        checkRep();
         add(source);
         add(target);
         Vertex<L> vertexsrc = vertices.get(hasVertex(source));
@@ -60,35 +61,40 @@ public class ConcreteVerticesGraph<L> implements Graph<L> {
             vertexsrc.getTargets().remove(target);
         }
         else preweight = 0;
+        checkRep();
         return preweight;
     }
 
     @Override
     public boolean remove(L vertex) {
+        checkRep();
         int index;
         if ((index = hasVertex(vertex)) != -1) {
             vertices.remove(index);
+            checkRep();
             return true;
         }
+        checkRep();
         return false;
     }
 
     @Override
     public Set<L> vertices() {
+        checkRep();
         Set<L> newvertices = new HashSet<>();
         L temp;
         Iterator<Vertex<L>> it = vertices.iterator();
-        int i = 0;
         while (it.hasNext()) {
-            temp = vertices.get(i).getName();
+            temp = it.next().getName();
             newvertices.add(temp);
-            i++;
         }
+        checkRep();
         return newvertices;
     }
 
     @Override
     public Map<L, Integer> sources(L target) {
+        checkRep();
         Map<L, Integer> newsources = new HashMap<>();
         Iterator<Vertex<L>> it = vertices.iterator();
         Vertex<L> temptarg;
@@ -97,27 +103,34 @@ public class ConcreteVerticesGraph<L> implements Graph<L> {
             if(temptarg.hasTarget(target))
                 newsources.put(temptarg.getName(), temptarg.getTargets().get(target));
         }  
+        checkRep();
         return newsources;
     }
 
     @Override
     public Map<L, Integer> targets(L source) {
+        checkRep();
         return vertices.get(hasVertex(source)).getTargets();
     }
     
     //判断顶点是否存在
     public int hasVertex(L vertex) {
+        checkRep();
         Iterator<Vertex<L>> it = vertices.iterator();
         int index = 0;
         while(it.hasNext()) {
-            if (it.next().getName() == vertex)
+            if (it.next().getName().equals(vertex)) {
+                checkRep();
                 return index;
+            }
             index++;
         }
+        checkRep();
         return -1;// 不存在则返回-1
     }
-    // TODO toString()
+
     public String toString() {
+        checkRep();
         return vertices.stream()
                 .filter(vertice -> !vertice.getTargets().isEmpty())
                 .map(vertice -> vertice.toString())
@@ -135,7 +148,6 @@ public class ConcreteVerticesGraph<L> implements Graph<L> {
  */
 class Vertex<L> {
 
-    // TODO fields
     private final L vertexname;
     private final Map<L, Integer> targets = new HashMap<>();
     
@@ -147,16 +159,13 @@ class Vertex<L> {
     // the key should be String type
     // the value >= 0
     // Safety from rep exposure:
-    // all the fields are private
-    // vertexname are final
+    // all the fields are private and final
     
 
-    // TODO constructor
     public Vertex(final L vertex) {
         this.vertexname = vertex;
     }
     
-    // TODO checkRep
     public void checkRep() {
         assert vertexname != null;
         Iterator<Map.Entry<L, Integer>> it = targets.entrySet().iterator();
@@ -168,7 +177,6 @@ class Vertex<L> {
         }
     }
     
-    // TODO methods
     public L getName() {
         checkRep();
         return vertexname;
@@ -202,7 +210,7 @@ class Vertex<L> {
         checkRep();
         return targets;
     }
-    // TODO toString()
+
     public String toString() {
         checkRep();
         List<String> ret = new ArrayList<>();

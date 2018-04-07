@@ -67,7 +67,7 @@ public class FriendshipGraphTest {
             assertTrue(!it2.next().isVisit);
         }
     }
-
+    
     @Test
     public void testAddVertex() {
         assertEquals(Collections.EMPTY_SET,graph.getPersons());
