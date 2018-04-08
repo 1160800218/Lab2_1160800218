@@ -80,7 +80,7 @@ public class FriendshipGraph {
      */
     public int getDistance(Person start, Person end) {
         checkRep();
-        if (start == end)
+        if (start.equals(end))
             return 0;
         Queue<Person> queue = new LinkedList<Person>();
         queue.offer(start);

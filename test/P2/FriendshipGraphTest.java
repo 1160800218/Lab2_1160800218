@@ -16,7 +16,23 @@ import org.junit.Test;
 public class FriendshipGraphTest {
     
     // Testing strategy
-    //   TODO
+    //   setIsVisitFalse()
+    //     input a key, no output;
+    //     observe the value of the key's isVisit 
+    //   setListFalse()
+    //     input a set with keys, no output;
+    //     observe the value of the value of keys in the set
+    //   addVertex()
+    //     input a key, no output;
+    //     if no vertex added, vertices is empty;
+    //     compare vertices with expected set
+    //   addEdge()
+    //     input two different keys and a integer, no output;
+    //     observe whether the two keys are added to vertices;
+    //     observe the distance of the two keys
+    //   getDistance()
+    //     input two different keys, output a integer;
+    //     compare the output with expected value
     
     @Before
     public void setUp() throws Exception {
