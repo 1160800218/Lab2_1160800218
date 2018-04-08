@@ -32,10 +32,9 @@ public class ConcreteVerticesGraphTest extends GraphInstanceTest {
      */
     
     // Testing strategy for ConcreteVerticesGraph.toString()
-    // Create a new empty graph
-    // add 4 different vertices and 6 different edges to the graph
-    // add a repeated vertex to test rechecking function
-    // expected: return a String consist of 6 different "x->y" separated by "\n" 
+    //   add some vertices and edges,
+    //   add a repeated vertex to test rechecking function
+    //   expect return a String consist of 6 different "x->y" separated by "\n" 
     
     // tests for ConcreteVerticesGraph.toString()
     Graph<String> graph = emptyInstance();
@@ -60,7 +59,17 @@ public class ConcreteVerticesGraphTest extends GraphInstanceTest {
      */
     
     // Testing strategy for Vertex
-    // TODO
+    //   getName()
+    //     no input, only output name of vertex
+    //   hasTarget()
+    //     input a target key, 
+    //     if exist, output true, else false
+    //   setTarget()
+    //     if the target is not existent, input target vertex and weight, output 0, 
+    //     if the target is existent, input target vertex and weight, output preweight
+    //   getTarget()
+    //     no input, only output all target keys and values of the vertex
+    //     compare the output with expected map
     
     // tests for operations of Vertex
     @Test
@@ -82,7 +91,7 @@ public class ConcreteVerticesGraphTest extends GraphInstanceTest {
         assertEquals(0, test2.setWeight("jeff", 2018));
     }
     @Test
-    public void testGetTargets() {
+    public void testGetTarget() {
         Vertex<String> test1 = new Vertex<>("jeff");
         Map<String, Integer> cities = new HashMap<>();
         test1.setWeight("Harbin", 2016);
@@ -91,6 +100,6 @@ public class ConcreteVerticesGraphTest extends GraphInstanceTest {
         cities.put("Harbin", 2016);
         cities.put("Amoy", 2013);
         cities.put("Lanzhou", 2017);
-        assertEquals(cities, test1.getTargets());
+        assertEquals(cities, test1.getTarget());
     }
 }

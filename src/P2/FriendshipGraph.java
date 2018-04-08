@@ -114,6 +114,7 @@ public class FriendshipGraph {
      * @return
      */
     public Set<Person> getPersons(){
+        checkRep();
         return graph.vertices();
     }
     

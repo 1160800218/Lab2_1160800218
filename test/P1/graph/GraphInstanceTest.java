@@ -24,7 +24,23 @@ import org.junit.Test;
 public abstract class GraphInstanceTest {
     
     // Testing strategy
-    //   TODO
+    //   add()
+    //     increase the number of vertices, add repeated vertex will fail
+    //   set()
+    //     if the edge is not existent, input vertices and weight, output 0, 
+    //     if the edge is existent, input vertices and weight, output preweight,
+    //     specially, input 0 weight will delete a edge and output 0
+    //   remove()
+    //     decrease the number of vertices, remove existent vertex will fail
+    //   vertices()
+    //     no vertices, only output a empty list,
+    //     if using add() or remove(), vertices number changes
+    //   sources()
+    //     no edges, only output a empty map,
+    //     construct a excepted map to compare the output
+    //   targets()
+    //     no edges, only output a empty map,
+    //     construct a excepted map to compare the output
     
     /**
      * Overridden by implementation-specific test classes.
@@ -85,6 +101,7 @@ public abstract class GraphInstanceTest {
     public void testGetSources() {
         Graph<String> graph = emptyInstance();
         Map<String, Integer> sources = new HashMap<>();
+        assertEquals("expected get a empty map", sources, graph.sources("add_3"));
         sources.put("add_2", 1);
         sources.put("add_1", 2);
         assertEquals("expected success to add a new edge and return 0", 0, graph.set("add_2", "add_3", 1));
@@ -95,6 +112,8 @@ public abstract class GraphInstanceTest {
     public void testGetTargets() {
         Graph<String> graph = emptyInstance();
         Map<String, Integer> targets = new HashMap<>();
+        graph.add("add_1");
+        assertEquals("expected get a empty map", targets, graph.targets("add_1"));
         targets.put("add_2", 1);
         targets.put("add_3", 2);
         assertEquals("expected success to add a new edge and return 0", 0, graph.set("add_1", "add_2", 1));

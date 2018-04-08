@@ -29,10 +29,8 @@ public class ConcreteEdgesGraphTest extends GraphInstanceTest {
      */
     
     // Testing strategy for ConcreteEdgesGraph.toString()
-    // Create a new empty graph
-    // add 4 different vertices and 4 different edges to the graph
-    // add a repeated vertex to test rechecking function
-    // expected: return a String consist of 4 different "x->y" separated by "\n" 
+    //   add some vertices and edges,
+    //   expect output a String consist of 4 different "x->y" separated by "\n" 
     
     // tests for ConcreteEdgesGraph.toString()
     Graph<String> graph = emptyInstance();
@@ -56,7 +54,15 @@ public class ConcreteEdgesGraphTest extends GraphInstanceTest {
      */
     
     // Testing strategy for Edge
-    //   TODO
+    //   getSource()
+    //     no input, only output source of edge
+    //     compare the output with expected key
+    //   getTarget()
+    //     no input, only output target of edge
+    //     compare the output with expected key
+    //   getWeight()
+    //     no input, only output weight of edge
+    //     compare the output with expected value
     
     // tests for operations of Edge
     @Test

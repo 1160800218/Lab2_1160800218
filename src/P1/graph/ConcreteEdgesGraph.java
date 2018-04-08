@@ -143,7 +143,6 @@ public class ConcreteEdgesGraph<L> implements Graph<L> {
  */
 class Edge<L> {
 
-    // TODO fields
     private final L source, target;
     private final int weight;
     
@@ -185,7 +184,6 @@ class Edge<L> {
         return weight;
     }
 
-    // TODO toString()
     public String toString() {
         checkRep();
         return getsource().toString() + "->" + gettarget().toString();

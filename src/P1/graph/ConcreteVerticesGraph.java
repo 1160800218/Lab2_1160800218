@@ -57,8 +57,8 @@ public class ConcreteVerticesGraph<L> implements Graph<L> {
             preweight = vertexsrc.setWeight(target, weight);
         }
         else if (weight <= 0 && vertexsrc.hasTarget(target)) {
-            preweight = vertexsrc.getTargets().get(target);
-            vertexsrc.getTargets().remove(target);
+            preweight = vertexsrc.getTarget().get(target);
+            vertexsrc.getTarget().remove(target);
         }
         else preweight = 0;
         checkRep();
@@ -101,7 +101,7 @@ public class ConcreteVerticesGraph<L> implements Graph<L> {
         while (it.hasNext()) {
             temptarg = it.next();
             if(temptarg.hasTarget(target))
-                newsources.put(temptarg.getName(), temptarg.getTargets().get(target));
+                newsources.put(temptarg.getName(), temptarg.getTarget().get(target));
         }  
         checkRep();
         return newsources;
@@ -110,7 +110,7 @@ public class ConcreteVerticesGraph<L> implements Graph<L> {
     @Override
     public Map<L, Integer> targets(L source) {
         checkRep();
-        return vertices.get(hasVertex(source)).getTargets();
+        return vertices.get(hasVertex(source)).getTarget();
     }
     
     //≈–∂œ∂•µ„ «∑Ò¥Ê‘⁄
@@ -132,7 +132,7 @@ public class ConcreteVerticesGraph<L> implements Graph<L> {
     public String toString() {
         checkRep();
         return vertices.stream()
-                .filter(vertice -> !vertice.getTargets().isEmpty())
+                .filter(vertice -> !vertice.getTarget().isEmpty())
                 .map(vertice -> vertice.toString())
                 .collect(Collectors.joining("\n"));
     }
@@ -206,7 +206,7 @@ class Vertex<L> {
         return preweight;
     } 
     
-    public Map<L, Integer> getTargets(){
+    public Map<L, Integer> getTarget(){
         checkRep();
         return targets;
     }

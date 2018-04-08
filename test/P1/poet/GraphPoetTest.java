@@ -18,7 +18,15 @@ import org.junit.Test;
 public class GraphPoetTest {
     
     // Testing strategy
-    //   TODO
+    //   getWords()
+    //     no input, only output a list including words from the file
+    //     observe the number of words and whether include expected word
+    //   poem()
+    //     input a incomplete poem, output a complete peom
+    //     the output should be the same with the corpus sentence
+    //   toString()
+    //     no input, output the corpus words in order
+    //     compare with expected corpus
     
     @Test(expected=AssertionError.class)
     public void testAssertionsEnabled() {
